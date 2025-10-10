@@ -749,13 +749,13 @@ const AdminPage = ({ navigate }) => {
                     value={categoryName}
                     onChange={(e) => setCategoryName(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleAddCategory()}
-                    className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   <button
                     onClick={handleAddCategory}
                     className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 flex items-center gap-2"
                   >
-                    <Plus className="w-5 h-5" />
+                    <Plus className="w-2 h-5" />
                     Add Category
                   </button>
                 </div>
