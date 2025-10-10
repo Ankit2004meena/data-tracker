@@ -720,7 +720,7 @@ const AdminPage = ({ navigate }) => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-2 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-sm mb-6">
           <div className="flex border-b">
             {['categories', 'subcategories', 'questions', 'import'].map(tab => (
@@ -753,9 +753,9 @@ const AdminPage = ({ navigate }) => {
                   />
                   <button
                     onClick={handleAddCategory}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 flex items-center gap-2"
+                    className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 flex items-center gap-2"
                   >
-                  
+                    
                     Add Category
                   </button>
                 </div>
