@@ -720,7 +720,7 @@ const AdminPage = ({ navigate }) => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-2 py-8">
         <div className="bg-white rounded-lg shadow-sm mb-6">
           <div className="flex border-b">
             {['categories', 'subcategories', 'questions', 'import'].map(tab => (
@@ -742,7 +742,7 @@ const AdminPage = ({ navigate }) => {
             {activeTab === 'categories' && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">Manage Categories</h2>
-                <div className="flex gap-4 mb-6">
+                <div className="flex gap-2 mb-6">
                   <input
                     type="text"
                     placeholder="Category name"
