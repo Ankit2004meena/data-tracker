@@ -2,7 +2,8 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { Code, CheckCircle, Circle, Search, Plus, Trash2, Download, Upload, Home, Settings, ChevronDown, ChevronRight, ExternalLink, Loader, AlertCircle } from 'lucide-react';
 
 // API Configuration
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://data-tracker-backend.onrender.com/api';
+
 
 // API Service
 const api = {
