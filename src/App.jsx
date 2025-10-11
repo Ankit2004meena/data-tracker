@@ -4,7 +4,7 @@ import { Plus, Trash2, Edit2, Eye, ChevronDown, ChevronRight, Upload, X, FileTex
 // Replace these with your actual Cloudinary credentials
 const CLOUDINARY_CLOUD_NAME = 'dvgjzeg0l'; // e.g. 'mycloudname'
 const CLOUDINARY_UPLOAD_PRESET = 'sop_uploads';
-const API_BASE_URL = 'https://data-tracker-backend.onrender.com/api'; // Adjust if your backend is hosted elsewhere
+const API_BASE_URL = 'https://data-tracker-backend.vercel.app/api';
 
 // Helper to check if Cloudinary is configured
 const isCloudinaryConfigured = () => CLOUDINARY_CLOUD_NAME !== 'your_cloud_name_here';
@@ -133,8 +133,7 @@ const DataProvider = ({ children }) => {
     // Build proper Cloudinary URL with fl_attachment for downloads
     let downloadUrl = result.secure_url;
     if (!isImage && result.public_id) {
-    downloadUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/raw/upload/fl_attachment:${result.original_filename}.pdf`;
-
+      downloadUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/raw/upload/fl_attachment/${result.public_id}`;
     }
     
     return {
@@ -245,8 +244,17 @@ const AttachmentDisplay = ({ attachments, onRemove, readonly = false }) => {
   };
 
   const handleView = (att) => {
-    // Open in new tab - browser will handle PDF viewing
-    window.open(att.url, '_blank', 'noopener,noreferrer');
+    const name = att.filename?.toLowerCase() || '';
+    const isPDF = att.mimeType?.includes('pdf') || name.endsWith('.pdf');
+    
+    if (isPDF) {
+      // For PDFs, use Google Docs viewer as fallback
+      const viewUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(att.url)}&embedded=true`;
+      window.open(viewUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      // For other files, open directly
+      window.open(att.url, '_blank', 'noopener,noreferrer');
+    }
   };
 
   const getFileIcon = (att) => {
@@ -308,13 +316,29 @@ const AttachmentDisplay = ({ attachments, onRemove, readonly = false }) => {
                 <div className="flex items-center gap-2 mt-1">
                   <button
                     onClick={() => handleView(att)}
-                    className="text-xs text-indigo-600 hover:text-indigo-700 font-medium hover:underline"
-                    title="Open in new tab"
+                    className="text-xs text-indigo-600 hover:text-indigo-700 font-medium hover:underline flex items-center gap-1"
+                    title="View in browser"
                   >
+                    <Eye className="w-3 h-3" />
                     View
                   </button>
-                
-                 
+                  <span className="text-gray-300">|</span>
+                  <button
+                    onClick={() => handleDownload(att)}
+                    className="text-xs text-green-600 hover:text-green-700 font-medium hover:underline flex items-center gap-1"
+                    title="Download file"
+                  >
+                    <Download className="w-3 h-3" />
+                    Download
+                  </button>
+                  <span className="text-gray-300">|</span>
+                  <button
+                    onClick={() => window.open(att.url, '_blank')}
+                    className="text-xs text-gray-600 hover:text-gray-700 font-medium hover:underline"
+                    title="Open direct link"
+                  >
+                    Direct
+                  </button>
                 </div>
               </div>
               {!readonly && (
@@ -406,20 +430,38 @@ const SOPViewPage = ({ sopId, navigate }) => {
             {expanded[step.id] && (
               <div className="p-6">
                 {step.stepHead.subtext && <p className="text-gray-600 mb-3">{step.stepHead.subtext}</p>}
-                {step.stepHead.link && <a href={step.stepHead.link} target="_blank" rel="noopener noreferrer" className="text-indigo-600 text-sm">🔗 {step.stepHead.link}</a>}
+                {step.stepHead.link && (
+                  <a href={step.stepHead.link} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline text-sm inline-block mb-3">
+                    🔗 {step.stepHead.link}
+                  </a>
+                )}
                 <AttachmentDisplay attachments={step.stepHead.attachments} readonly />
                 {step.subHeads?.map(sub => (
                   <div key={sub.id} className="mt-4 border-l-4 border-indigo-300 pl-4">
-                    <h3 className="text-lg font-medium">{sub.subHeadName.text}</h3>
-                    {sub.subHeadName.subtext && <p className="text-gray-600 text-sm">{sub.subHeadName.subtext}</p>}
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">{sub.subHeadName.text}</h3>
+                    {sub.subHeadName.subtext && (
+                      <p className="text-gray-600 text-sm mb-2">{sub.subHeadName.subtext}</p>
+                    )}
+                    {sub.subHeadName.link && (
+                      <a href={sub.subHeadName.link} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline text-sm inline-block mb-2">
+                        🔗 {sub.subHeadName.link}
+                      </a>
+                    )}
                     <AttachmentDisplay attachments={sub.subHeadName.attachments} readonly />
-                    <ul className="mt-2 space-y-2">
+                    <ul className="mt-3 space-y-3">
                       {sub.questions?.map(q => (
                         <li key={q.id} className="flex gap-2">
-                          <span className="text-indigo-600">•</span>
-                          <div>
-                            <span>{q.text}</span>
-                            {q.subtext && <p className="text-gray-600 text-sm">{q.subtext}</p>}
+                          <span className="text-indigo-600 mt-1">•</span>
+                          <div className="flex-1">
+                            <span className="text-gray-900 font-medium">{q.text}</span>
+                            {q.subtext && (
+                              <p className="text-gray-600 text-sm mt-1">{q.subtext}</p>
+                            )}
+                            {q.link && (
+                              <a href={q.link} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline text-sm inline-block mt-1">
+                                🔗 {q.link}
+                              </a>
+                            )}
                             <AttachmentDisplay attachments={q.attachments} readonly />
                           </div>
                         </li>
