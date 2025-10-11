@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { Plus, Trash2, Edit2, Eye, ChevronDown, ChevronRight, Upload, X, FileText, Home, Settings, Download, Loader, Save } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://data-tracker-backend.onrender.com/api';
 
 const api = {
   async getSOPs() {
