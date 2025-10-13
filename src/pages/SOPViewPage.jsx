@@ -3,7 +3,7 @@ import { ChevronDown, ChevronRight, Home } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import AttachmentDisplay from '../components/attachments/AttachmentDisplay';
-import AttachmentUploader from '../components/attachments/attachmentUploader';
+import AttachmentUploader from '../components/attachments/AttachmentUploader';
 import ReactMarkdown from "react-markdown";
 
 const SOPViewPage = ({ sopId, navigate }) => {

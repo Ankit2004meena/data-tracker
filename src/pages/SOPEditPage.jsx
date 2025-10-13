@@ -3,7 +3,7 @@ import { Save, Trash2, Plus } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import AttachmentDisplay from '../components/attachments/AttachmentDisplay';
-import AttachmentUploader from '../components/attachments/attachmentUploader';
+import AttachmentUploader from '../components/attachments/AttachmentUploader';
 const SOPEditPage = ({ sopId, navigate }) => {
   const { data, updateSOP, loading } = useData();
   const [sop, setSop] = useState(null);
@@ -91,7 +91,7 @@ const SOPEditPage = ({ sopId, navigate }) => {
                   <div className="flex justify-between mb-3">
                     <div className="flex-1">
                       <input type="text" value={sub.subHeadName.text} onChange={(e) => updSubTxt(si, shi, e.target.value)} placeholder="Sub head" className="text-lg font-medium w-full border-b focus:border-indigo-500 outline-none pb-1 bg-transparent mb-2" />
-                      <textarea value={sub.subHeadName.subtext || ''} onChange={(e) => updSubSub(si, shi, e.target.value)} placeholder="Description" className="w-full px-3 py-2 border rounded text-sm bg-white mb-2 whitespace-pre-wrap" rows="2" />
+                      <textarea value={sub.subHeadName.subtext || ''} onChange={(e) => updSubSub(si, shi, e.target.value)} placeholder="Description" className="w-full px-3 py-2 border rounded text-sm bg-white mb-2 " rows="2" />
                       <input type="url" value={sub.subHeadName.link || ''} onChange={(e) => updSubLnk(si, shi, e.target.value)} placeholder="Link" className="w-full px-3 py-2 border rounded text-sm bg-white mb-2" />
                       <AttachmentUploader onUpload={(a) => addSubAtt(si, shi, a)} />
                       <AttachmentDisplay attachments={sub.subHeadName.attachments} onRemove={(ai) => delSubAtt(si, shi, ai)} />
