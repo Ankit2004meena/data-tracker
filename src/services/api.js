@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://data-tracker-backend.onrender.com/api';
+const API_BASE_URL = 'https://data-tracker-backend.vercel.app/api';
 import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from '../config/cloudinary';
 
 const api = {
