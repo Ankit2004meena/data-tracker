@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Home, Plus, Trash2, Download, Upload } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import DeleteConfirmModal from '../components/DeleteConfirmModal';
 
 const AdminPage = ({ navigate }) => {
-  const { data, addSOP, deleteSOP, importData } = useData();
+const { data, addSOP, importData } = useData();
+  const { deleteSOP } = useData();
   const [name, setName] = useState('');
   const [notif, setNotif] = useState(null);
+  const [modalSOP, setModalSOP] = useState(null); // SOP pending deletion
 
   const notify = (msg, type = 'success') => {
     setNotif({ message: msg, type });
@@ -55,6 +58,16 @@ const AdminPage = ({ navigate }) => {
     reader.readAsText(file);
   };
 
+  const handleConfirmDelete = async (input) => {
+    if (input === modalSOP.name) {
+      await deleteSOP(modalSOP.id);
+      setModalSOP(null);
+      notify('SOP deleted!');
+    } else {
+      notify('SOP name did not match. Deletion cancelled.', 'error');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {notif && (
@@ -62,6 +75,7 @@ const AdminPage = ({ navigate }) => {
           {notif.message}
         </div>
       )}
+
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <button onClick={() => navigate('/')} className="flex items-center text-gray-600 hover:text-gray-900 mb-4">
@@ -70,6 +84,7 @@ const AdminPage = ({ navigate }) => {
           <h1 className="text-4xl font-bold text-gray-900">Admin Panel</h1>
         </div>
       </div>
+
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <h2 className="text-2xl font-bold mb-4">Create New SOP</h2>
@@ -90,6 +105,7 @@ const AdminPage = ({ navigate }) => {
             </button>
           </div>
         </div>
+
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <h2 className="text-2xl font-bold mb-4">Manage SOPs</h2>
           <div className="space-y-2">
@@ -107,12 +123,7 @@ const AdminPage = ({ navigate }) => {
                     Edit
                   </button>
                   <button
-                    onClick={async () => {
-                      if (window.confirm(`Delete SOP "${sop.name}"?`)) {
-                        await deleteSOP(sop.id);
-                        notify('SOP deleted!');
-                      }
-                    }}
+                    onClick={() => setModalSOP(sop)}
                     className="text-red-600 hover:text-red-700"
                   >
                     <Trash2 className="w-5 h-5" />
@@ -122,6 +133,7 @@ const AdminPage = ({ navigate }) => {
             ))}
           </div>
         </div>
+
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-2xl font-bold mb-4">Import/Export Data</h2>
           <div className="space-y-4">
@@ -147,6 +159,14 @@ const AdminPage = ({ navigate }) => {
           </div>
         </div>
       </div>
+
+      {modalSOP && (
+        <DeleteConfirmModal
+          sopName={modalSOP.name}
+          onCancel={() => setModalSOP(null)}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
     </div>
   );
 };
