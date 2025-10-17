@@ -8,6 +8,7 @@ import ReactMarkdown from 'react-markdown';
 const SOPViewPage = ({ sopId, navigate }) => {
   const { data, loading } = useData();
   const [expanded, setExpanded] = useState({});
+  const [subDescExpanded, setSubDescExpanded] = useState({});
   const sop = data.find((s) => s.id === sopId);
 
   if (loading) return <LoadingSpinner />;
@@ -48,7 +49,9 @@ const SOPViewPage = ({ sopId, navigate }) => {
               }
               className="w-full px-6 py-4 flex items-center justify-between bg-indigo-600 text-white"
             >
-              <span className="text-xl font-semibold">{step.stepHead.text}</span>
+              <span className="text-xl font-semibold">
+                {step.stepHead.text}
+              </span>
               {expanded[step.id] ? (
                 <ChevronDown className="w-6 h-6" />
               ) : (
@@ -69,22 +72,54 @@ const SOPViewPage = ({ sopId, navigate }) => {
                     href={step.stepHead.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-indigo-600 hover:underline text-sm inline-block break-words"
+                    className="text-indigo-600 hover:underline text-sm break-all inline-block max-w-full"
                   >
                     🔗 {step.stepHead.link}
                   </a>
                 )}
 
                 {/* Step attachments */}
-                <AttachmentDisplay attachments={step.stepHead.attachments} readonly />
+                <AttachmentDisplay
+                  attachments={step.stepHead.attachments}
+                  readonly
+                />
 
                 {/* Sub-heads */}
                 {step.subHeads?.map((sub) => (
-                  <div key={sub.id} className="mt-4 border-l-4 border-indigo-300 pl-4 space-y-2">
-                    <h3 className="text-lg font-medium text-gray-900">{sub.subHeadName.text}</h3>
-                    <div className="text-gray-600 text-sm whitespace-pre-wrap break-words overflow-hidden prose prose-indigo max-w-none">
-                      <ReactMarkdown>{sub.subHeadName.subtext}</ReactMarkdown>
+                  <div
+                    key={sub.id}
+                    className="mt-4 border-l-4 border-indigo-300 pl-4 space-y-2"
+                  >
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-medium text-gray-900">
+                        {sub.subHeadName.text}
+                      </h3>
+                      {/* Only show toggle icon if description exists */}
+                      {sub.subHeadName.subtext && (
+                        <button
+                          onClick={() =>
+                            setSubDescExpanded((p) => ({
+                              ...p,
+                              [sub.id]: !p[sub.id],
+                            }))
+                          }
+                          className="text-indigo-600 hover:text-indigo-800"
+                        >
+                          {subDescExpanded[sub.id] ? (
+                            <ChevronDown className="w-5 h-5" />
+                          ) : (
+                            <ChevronRight className="w-5 h-5" />
+                          )}
+                        </button>
+                      )}
                     </div>
+
+                    {/* Sub-head description toggle */}
+                    {subDescExpanded[sub.id] && sub.subHeadName.subtext && (
+                      <div className="text-gray-600 text-sm whitespace-pre-wrap break-words overflow-hidden prose prose-indigo max-w-none">
+                        <ReactMarkdown>{sub.subHeadName.subtext}</ReactMarkdown>
+                      </div>
+                    )}
 
                     {/* Sub-head link */}
                     {sub.subHeadName.link && (
@@ -92,14 +127,17 @@ const SOPViewPage = ({ sopId, navigate }) => {
                         href={sub.subHeadName.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-indigo-600 hover:underline text-sm inline-block break-words"
+                        className="text-indigo-600 hover:underline text-sm break-all inline-block max-w-full"
                       >
                         🔗 {sub.subHeadName.link}
                       </a>
                     )}
 
                     {/* Sub-head attachments */}
-                    <AttachmentDisplay attachments={sub.subHeadName.attachments} readonly />
+                    <AttachmentDisplay
+                      attachments={sub.subHeadName.attachments}
+                      readonly
+                    />
 
                     {/* Questions */}
                     <ul className="mt-3 space-y-3">
@@ -107,7 +145,9 @@ const SOPViewPage = ({ sopId, navigate }) => {
                         <li key={q.id} className="flex gap-2">
                           <span className="text-indigo-600 mt-1">•</span>
                           <div className="flex-1">
-                            <span className="text-gray-900 font-medium">{q.text}</span>
+                            <span className="text-gray-900 font-medium">
+                              {q.text}
+                            </span>
                             <div className="text-gray-600 text-sm mt-1 whitespace-pre-wrap break-words overflow-hidden prose prose-indigo max-w-none">
                               <ReactMarkdown>{q.subtext}</ReactMarkdown>
                             </div>
@@ -117,12 +157,15 @@ const SOPViewPage = ({ sopId, navigate }) => {
                                 href={q.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-indigo-600 hover:underline text-sm inline-block break-words mt-1"
+                                className="text-indigo-600 hover:underline text-sm break-all inline-block max-w-full mt-1"
                               >
                                 🔗 {q.link}
                               </a>
                             )}
-                            <AttachmentDisplay attachments={q.attachments} readonly />
+                            <AttachmentDisplay
+                              attachments={q.attachments}
+                              readonly
+                            />
                           </div>
                         </li>
                       ))}
