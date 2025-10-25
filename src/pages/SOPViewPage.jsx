@@ -5,11 +5,13 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import AttachmentDisplay from '../components/attachments/AttachmentDisplay';
 import ReactMarkdown from 'react-markdown';
 
+
 const SOPViewPage = ({ sopId, navigate }) => {
   const { data, loading } = useData();
   const [expanded, setExpanded] = useState({});
   const [subDescExpanded, setSubDescExpanded] = useState({});
   const sop = data.find((s) => s.id === sopId);
+
 
   if (loading) return <LoadingSpinner />;
   if (!sop)
@@ -24,6 +26,7 @@ const SOPViewPage = ({ sopId, navigate }) => {
       </div>
     );
 
+
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       {/* Header */}
@@ -35,9 +38,10 @@ const SOPViewPage = ({ sopId, navigate }) => {
           >
             <Home className="w-5 h-5 mr-2" />Back
           </button>
-          <h1 className="text-4xl font-bold">{sop.name}</h1>
+          <h1 className="text-4xl font-bold break-words">{sop.name}</h1>
         </div>
       </div>
+
 
       {/* Steps */}
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-4">
@@ -49,24 +53,28 @@ const SOPViewPage = ({ sopId, navigate }) => {
               }
               className="w-full px-6 py-4 flex items-center justify-between bg-indigo-600 text-white"
             >
-              <span className="text-xl font-semibold">
+              <span className="text-xl font-semibold break-words pr-2">
                 {step.stepHead.text}
               </span>
               {expanded[step.id] ? (
-                <ChevronDown className="w-6 h-6" />
+                <ChevronDown className="w-6 h-6 flex-shrink-0" />
               ) : (
-                <ChevronRight className="w-6 h-6" />
+                <ChevronRight className="w-6 h-6 flex-shrink-0" />
               )}
             </button>
 
+
             {expanded[step.id] && (
               <div className="p-6 space-y-4">
-                {/* Step Markdown */}
-                <div className="text-gray-600 whitespace-pre-wrap break-words overflow-hidden prose prose-indigo max-w-none">
-                  <ReactMarkdown>{step.stepHead.subtext}</ReactMarkdown>
+                {/* Step Markdown with horizontal scroll */}
+                <div className="overflow-x-auto">
+                  <div className="text-gray-600 prose prose-indigo max-w-none min-w-0">
+                    <ReactMarkdown>{step.stepHead.subtext}</ReactMarkdown>
+                  </div>
                 </div>
 
-                {/* Step link */}
+
+                {/* Step link - normal wrap */}
                 {step.stepHead.link && (
                   <a
                     href={step.stepHead.link}
@@ -78,11 +86,13 @@ const SOPViewPage = ({ sopId, navigate }) => {
                   </a>
                 )}
 
+
                 {/* Step attachments */}
                 <AttachmentDisplay
                   attachments={step.stepHead.attachments}
                   readonly
                 />
+
 
                 {/* Sub-heads */}
                 {step.subHeads?.map((sub) => (
@@ -90,8 +100,8 @@ const SOPViewPage = ({ sopId, navigate }) => {
                     key={sub.id}
                     className="mt-4 border-l-4 border-indigo-300 pl-4 space-y-2"
                   >
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-medium text-gray-900">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="text-lg font-medium text-gray-900 break-words flex-1 min-w-0">
                         {sub.subHeadName.text}
                       </h3>
                       {/* Only show toggle icon if description exists */}
@@ -103,7 +113,7 @@ const SOPViewPage = ({ sopId, navigate }) => {
                               [sub.id]: !p[sub.id],
                             }))
                           }
-                          className="text-indigo-600 hover:text-indigo-800"
+                          className="text-indigo-600 hover:text-indigo-800 flex-shrink-0"
                         >
                           {subDescExpanded[sub.id] ? (
                             <ChevronDown className="w-5 h-5" />
@@ -114,14 +124,18 @@ const SOPViewPage = ({ sopId, navigate }) => {
                       )}
                     </div>
 
-                    {/* Sub-head description toggle */}
+
+                    {/* Sub-head description toggle with horizontal scroll */}
                     {subDescExpanded[sub.id] && sub.subHeadName.subtext && (
-                      <div className="text-gray-600 text-sm whitespace-pre-wrap break-words overflow-hidden prose prose-indigo max-w-none">
-                        <ReactMarkdown>{sub.subHeadName.subtext}</ReactMarkdown>
+                      <div className="overflow-x-auto">
+                        <div className="text-gray-600 text-sm prose prose-indigo max-w-none min-w-0">
+                          <ReactMarkdown>{sub.subHeadName.subtext}</ReactMarkdown>
+                        </div>
                       </div>
                     )}
 
-                    {/* Sub-head link */}
+
+                    {/* Sub-head link - normal wrap */}
                     {sub.subHeadName.link && (
                       <a
                         href={sub.subHeadName.link}
@@ -133,25 +147,32 @@ const SOPViewPage = ({ sopId, navigate }) => {
                       </a>
                     )}
 
+
                     {/* Sub-head attachments */}
                     <AttachmentDisplay
                       attachments={sub.subHeadName.attachments}
                       readonly
                     />
 
+
                     {/* Questions */}
                     <ul className="mt-3 space-y-3">
                       {sub.questions?.map((q) => (
                         <li key={q.id} className="flex gap-2">
-                          <span className="text-indigo-600 mt-1">•</span>
-                          <div className="flex-1">
-                            <span className="text-gray-900 font-medium">
+                          <span className="text-indigo-600 mt-1 flex-shrink-0">•</span>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-gray-900 font-medium break-words">
                               {q.text}
                             </span>
-                            <div className="text-gray-600 text-sm mt-1 whitespace-pre-wrap break-words overflow-hidden prose prose-indigo max-w-none">
-                              <ReactMarkdown>{q.subtext}</ReactMarkdown>
+                            {/* Question description with horizontal scroll */}
+                            <div className="overflow-x-auto mt-1">
+                              <div className="text-gray-600 text-sm prose prose-indigo max-w-none min-w-0">
+                                <ReactMarkdown>{q.subtext}</ReactMarkdown>
+                              </div>
                             </div>
 
+
+                            {/* Question link - normal wrap */}
                             {q.link && (
                               <a
                                 href={q.link}
@@ -180,5 +201,6 @@ const SOPViewPage = ({ sopId, navigate }) => {
     </div>
   );
 };
+
 
 export default SOPViewPage;
