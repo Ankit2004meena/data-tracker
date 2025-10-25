@@ -68,13 +68,13 @@ const SOPViewPage = ({ sopId, navigate }) => {
               <div className="p-6 space-y-4">
                 {/* Step Markdown with horizontal scroll */}
                 <div className="overflow-x-auto">
-                  <div className="text-gray-600 prose prose-indigo max-w-none min-w-0">
+                  <div className="text-gray-600 whitespace-pre-wrap prose prose-indigo max-w-none">
                     <ReactMarkdown>{step.stepHead.subtext}</ReactMarkdown>
                   </div>
                 </div>
 
 
-                {/* Step link - normal wrap */}
+                {/* Step link */}
                 {step.stepHead.link && (
                   <a
                     href={step.stepHead.link}
@@ -128,14 +128,14 @@ const SOPViewPage = ({ sopId, navigate }) => {
                     {/* Sub-head description toggle with horizontal scroll */}
                     {subDescExpanded[sub.id] && sub.subHeadName.subtext && (
                       <div className="overflow-x-auto">
-                        <div className="text-gray-600 text-sm prose prose-indigo max-w-none min-w-0">
+                        <div className="text-gray-600 text-sm whitespace-pre-wrap prose prose-indigo max-w-none">
                           <ReactMarkdown>{sub.subHeadName.subtext}</ReactMarkdown>
                         </div>
                       </div>
                     )}
 
 
-                    {/* Sub-head link - normal wrap */}
+                    {/* Sub-head link */}
                     {sub.subHeadName.link && (
                       <a
                         href={sub.subHeadName.link}
@@ -166,13 +166,13 @@ const SOPViewPage = ({ sopId, navigate }) => {
                             </span>
                             {/* Question description with horizontal scroll */}
                             <div className="overflow-x-auto mt-1">
-                              <div className="text-gray-600 text-sm prose prose-indigo max-w-none min-w-0">
+                              <div className="text-gray-600 text-sm whitespace-pre-wrap prose prose-indigo max-w-none">
                                 <ReactMarkdown>{q.subtext}</ReactMarkdown>
                               </div>
                             </div>
 
 
-                            {/* Question link - normal wrap */}
+                            {/* Question link */}
                             {q.link && (
                               <a
                                 href={q.link}
